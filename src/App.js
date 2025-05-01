@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from 'react';
 import './App.css';
 
@@ -20,8 +21,6 @@ function App() {
       const apiKey = '076f7bfb2b964919b5075e4bebd5b9b0';
       const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(input)}&apiKey=${apiKey}`;
 
-      console.log('Отправляю запрос:', url); // Для отладки
-
       const response = await fetch(url);
       
       if (!response.ok) {
@@ -43,7 +42,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>🍳 Search for recipes</h1>
+      <h1>🍳 Search for Recipes</h1>
       
       <div className="search-box">
         <input
@@ -51,9 +50,10 @@ function App() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="chicken, rice (только английский)"
+          onKeyPress={(e) => e.key === 'Enter' && searchRecipes()}
         />
         <button onClick={searchRecipes} disabled={loading}>
-          {loading ? 'Поиск...' : 'Найти'}
+          {loading ? 'Searching...' : 'Find Recipes'}
         </button>
       </div>
 
@@ -65,11 +65,12 @@ function App() {
             <div key={recipe.id} className="recipe-card">
               <h3>{recipe.title}</h3>
               <img src={recipe.image} alt={recipe.title} />
-              <p>Использовано: {recipe.usedIngredientCount} ингредиентов</p>
+              <p>Used ingredients: {recipe.usedIngredientCount}</p>
+              <p>Missing ingredients: {recipe.missedIngredientCount}</p>
             </div>
           ))
         ) : (
-          !loading && <p>Попробуйте: "eggs, milk" или "chicken, rice"</p>
+          !loading && <p style={{ color: '#666', gridColumn: '1/-1' }}>Try searching for: "eggs, milk" or "chicken, rice"</p>
         )}
       </div>
     </div>
